@@ -41,6 +41,9 @@ inputs:
   last_workflow_interval:
     description: 'The number of seconds delay between checking for the last workflow. default: 0'
     required: false
+  last_workflow_timeout:
+    description: 'The number of seconds to wait to find the triggered workflow before exiting. default: 10'
+    required: false
 outputs:
   workflow_id:
     description: The ID of the workflow that was triggered by this action

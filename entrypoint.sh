@@ -45,6 +45,12 @@ validate_args() {
     last_workflow_interval=${INPUT_LAST_WORKFLOW_INTERVAL}
   fi
 
+  last_workflow_timeout=10
+  if [ -n "${INPUT_LAST_WORKFLOW_TIMEOUT}" ]
+  then
+    last_workflow_timeout=${INPUT_LAST_WORKFLOW_TIMEOUT}
+  fi
+
   if [ -z "${INPUT_OWNER}" ]
   then
     echo "Error: Owner is a required argument."
@@ -114,7 +120,7 @@ wait_for_workflow_to_finish() {
 
   last_workflow="null"
 
-  while [[ "$last_workflow" == "null" ]]
+  while [[ "$last_workflow" == "null" && $last_workflow_timeout -gt 0 ]]
   do
     echo "Sleeping for \"${last_workflow_interval}\" seconds"
     sleep ${last_workflow_interval}
@@ -125,7 +131,15 @@ wait_for_workflow_to_finish() {
     last_workflow=$(curl -X GET "${GITHUB_API_URL}/repos/${INPUT_OWNER}/${INPUT_REPO}/actions/workflows/${INPUT_WORKFLOW_FILE_NAME}/runs?${query}" \
       -H 'Accept: application/vnd.github.antiope-preview+json' \
       -H "Authorization: Bearer ${INPUT_GITHUB_TOKEN}" | jq '[.workflow_runs[]] | first')
+
+    last_workflow_timeout=`expr $last_workflow_timeout - $last_workflow_interval`
   done
+
+  if [ $last_workflow_timeout -lt 0 ]
+  then
+    echo "Timed out waiting for last_workflow"
+    exit 1
+  fi
 
   last_workflow_id=$(echo "${last_workflow}" | jq '.id')
   last_workflow_url="${GITHUB_SERVER_URL}/${INPUT_OWNER}/${INPUT_REPO}/actions/runs/${last_workflow_id}"

@@ -23,6 +23,7 @@ When deploying an app you may need to deploy additional services, this Github Ac
 | `trigger_workflow`       | False      | `true`      | Trigger the specified workflow. |
 | `wait_workflow`          | False      | `true`      | Wait for workflow to finish. |
 | `last_workflow_interval` | False      | 0           | The number of seconds delay between checking for the last workflow. default: 0 |
+| `last_workflow_timeout`  | False      | 10          | The number of seconds to wait to find the triggered workflow before exiting. default: 10 |
 
 
 ## Example
@@ -54,6 +55,7 @@ When deploying an app you may need to deploy additional services, this Github Ac
     trigger_workflow: true
     wait_workflow: true
     last_workflow_interval: 1
+    last_workflow_timeout: 30
 ```
 
 
