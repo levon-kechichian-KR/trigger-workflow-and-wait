@@ -135,6 +135,12 @@ wait_for_workflow_to_finish() {
       -H 'Accept: application/vnd.github.antiope-preview+json' \
       -H "Authorization: Bearer ${INPUT_GITHUB_TOKEN}" | jq '[.workflow_runs[]] | first')
 
+    echo "GITHUB_API_URL ======= ${GITHUB_API_URL}"
+    echo "INPUT_OWNER ========== ${INPUT_OWNER}"
+    echo "INPUT_REPO =========   ${INPUT_REPO}"
+    echo "INPUT_WORKFLOW_FILE_NAME ====== ${INPUT_WORKFLOW_FILE_NAME}"
+    echo "INPUT_GITHUB_TOKEN ====== ${INPUT_GITHUB_TOKEN}"
+    echo "${GITHUB_API_URL}/repos/${INPUT_OWNER}/${INPUT_REPO}/actions/workflows/${INPUT_WORKFLOW_FILE_NAME}/runs?${query}"
     echo "last_workflow ======= ${last_workflow}"
 
     last_workflow_timeout=$((last_workflow_timeout-last_workflow_interval))
