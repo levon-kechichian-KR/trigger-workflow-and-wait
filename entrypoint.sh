@@ -42,6 +42,7 @@ validate_args() {
   last_workflow_interval=0
   if [ -n "${INPUT_LAST_WORKFLOW_INTERVAL}" ]
   then
+    echo "INPUT_LAST_WORKFLOW_INTERVAL -=------- ${INPUT_LAST_WORKFLOW_INTERVAL}"
     last_workflow_interval=${INPUT_LAST_WORKFLOW_INTERVAL}
   fi
 
@@ -118,6 +119,8 @@ wait_for_workflow_to_finish() {
     query="${query}&actor=${INPUT_GITHUB_USER}"
   fi
 
+  echo "ACTOR Query ========= ${query}"
+
   last_workflow="null"
 
   while [[ "$last_workflow" == "null" && $last_workflow_timeout -gt 0 ]]
@@ -131,6 +134,8 @@ wait_for_workflow_to_finish() {
     last_workflow=$(curl -X GET "${GITHUB_API_URL}/repos/${INPUT_OWNER}/${INPUT_REPO}/actions/workflows/${INPUT_WORKFLOW_FILE_NAME}/runs?${query}" \
       -H 'Accept: application/vnd.github.antiope-preview+json' \
       -H "Authorization: Bearer ${INPUT_GITHUB_TOKEN}" | jq '[.workflow_runs[]] | first')
+
+    echo "last_workflow ======= ${last_workflow}"
 
     last_workflow_timeout=$((last_workflow_timeout-last_workflow_interval))
   done
