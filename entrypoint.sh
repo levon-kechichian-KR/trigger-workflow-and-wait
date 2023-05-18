@@ -42,6 +42,7 @@ validate_args() {
   last_workflow_interval=0
   if [ -n "${INPUT_LAST_WORKFLOW_INTERVAL}" ]
   then
+    echo "INPUT_LAST_WORKFLOW_INTERVAL -=------- ${INPUT_LAST_WORKFLOW_INTERVAL}"
     last_workflow_interval=${INPUT_LAST_WORKFLOW_INTERVAL}
   fi
 
@@ -117,6 +118,8 @@ wait_for_workflow_to_finish() {
   then
     query="${query}&actor=${INPUT_GITHUB_USER}"
   fi
+
+  echo "ACTOR Query ========= ${query}"
 
   last_workflow="null"
 
