@@ -135,6 +135,8 @@ wait_for_workflow_to_finish() {
       -H 'Accept: application/vnd.github.antiope-preview+json' \
       -H "Authorization: Bearer ${INPUT_GITHUB_TOKEN}" | jq '[.workflow_runs[]] | first')
 
+    echo "last_workflow ======= ${last_workflow}"
+
     last_workflow_timeout=$((last_workflow_timeout-last_workflow_interval))
   done
 
